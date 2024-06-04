@@ -1,62 +1,71 @@
-﻿#include <iostream>
+#include <iostream>
 
 using namespace std;
 
-class Complex {
+class ComplexNumber {
 private:
-    double real; 
-    double imaginary; 
+    double realPart;
+    double imaginaryPart;
 
 public:
-  
-    Complex() : real(0), imaginary(0) {}
-    Complex(double real, double imaginary) : real(real), imaginary(imaginary) {}
-
-    Complex& operator+(const Complex& other) {
-        Complex result(real + other.real, imaginary + other.imaginary);
-        return result;
+    ComplexNumber(double realPart, double imaginaryPart) {
+        this->realPart = realPart;
+        this->imaginaryPart = imaginaryPart;
     }
 
-    bool operator==(const Complex& other) const {
-        return (real == other.real) && (imaginary == other.imaginary);
+    ComplexNumber operator+(const ComplexNumber& other) const {
+        return ComplexNumber(realPart + other.realPart, imaginaryPart + other.imaginaryPart);
     }
 
-    bool operator<(const Complex& other) const {
-        if (real < other.real) {
-            return true;
-        }
-        else if (real == other.real) {
-            return imaginary < other.imaginary;
-        }
-        else {
-            return false;
-        }
+    bool operator==(const ComplexNumber& other) const {
+        return (realPart == other.realPart) && (imaginaryPart == other.imaginaryPart);
     }
 
-    Complex& operator=(const Complex& other) {
-        real = other.real;
-        imaginary = other.imaginary;
+    bool operator<(const ComplexNumber& other) const {
+        return (realPart < other.realPart) || ((realPart == other.realPart) && (imaginaryPart < other.imaginaryPart));
+    }
+
+    bool operator>(const ComplexNumber& other) const {
+        return (realPart > other.realPart) || ((realPart == other.realPart) && (imaginaryPart > other.imaginaryPart));
+    }
+
+    ComplexNumber& operator=(const ComplexNumber& other) {
+        if (this != &other) {
+            realPart = other.realPart;
+            imaginaryPart = other.imaginaryPart;
+        }
         return *this;
     }
 
-    friend ostream& operator<<(ostream& out, const Complex& complex) {
-        out << complex.real << " + " << complex.imaginary << "i";
-        return out;
+    double getRealPart() const {
+        return realPart;
+    }
+
+    double getImaginaryPart() const {
+        return imaginaryPart;
     }
 };
 
 int main() {
-    Complex c1(2, 3);
-    Complex c2(4, 5);
+    ComplexNumber num1(3.0, 4.0);
+    ComplexNumber num2(2.0, -5.0);
 
-    Complex sum = c1 + c2;
-    cout << "c1 + c2 = " << sum << endl; 
+    ComplexNumber sum = num1 + num2;
+    cout << "Sum: " << sum.getRealPart() << " + " << sum.getImaginaryPart() << "i" << endl;
 
-    cout << "c1 == c2: " << (c1 == c2) << endl; 
-    cout << "c1 < c2: " << (c1 < c2) << endl; 
+    if (num1 == num2) {
+        cout << "Numbers are equal" << endl;
+    }
+    else if (num1 < num2) {
+        cout << "First number is less than the second number" << endl;
+    }
+    else if (num1 > num2) {
+        cout << "First number is greater than the second number" << endl;
+    }
 
-    c1 = c2;
-    cout << "c1 after assignment c2: " << c1 << endl; 
+    ComplexNumber num3(0.0, 0.0);
+    num3 = num1;
+    cout << "Assigned value: " << num3.getRealPart() << " + " << num3.getImaginaryPart() << "i" << endl;
 
     return 0;
 }
